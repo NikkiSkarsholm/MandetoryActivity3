@@ -1,0 +1,18 @@
+syntax = "proto3";
+option go_package = "ChicChat/grpc/proto";
+
+
+// Declare messages
+message Message {
+  string msg = 1;
+  string author = 2;
+  string lamportTimestamp = 3;
+}
+
+message Empty {}
+
+// Declare gRPC services
+service ChitChat {
+  rpc MessageToServer (Message) returns (Empty) {}; // Make a GET to the Server
+  rpc GetStream (Empty) returns (stream Message) {}; // Make a Stream to the Server
+}
