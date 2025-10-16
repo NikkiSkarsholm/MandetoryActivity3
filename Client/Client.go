@@ -7,46 +7,63 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
 	"strings"
-	"time"
 
 	"google.golang.org/grpc"
 	//"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+var client proto.ChitChatClient
+var userName string
+var id int32
+
 func main() {
+	// make profile
+	fmt.Println("Please enter your usename:")
+	userName = readTerminal()
+
+	// connecyting to server
+	fmt.Println("Connectin to server ...")
 	conn, err := grpc.NewClient("localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("could not connect: %v", err)
 	}
+	client = proto.NewChitChatClient(conn)
+	joinServer()
+	fmt.Println("Connection established")
 
-	client := proto.NewChitChatClient(conn)
+	// Print messeges using the message stream
+	go messageStream(client)
 
-	_, err = client.MessageToServer(context.Background(), &proto.Message{Msg: "Hello World", Author: "Karam"})
+	// read user inputs and send to server
+	for {
+		userInput := readTerminal()
+
+		if userInput == "Quit" || userInput == "quit" || userInput == "Q" || userInput == "q" {
+			leaveServer()
+			return
+		}
+
+		messageServer(userInput)
+	}
+}
+
+func messageServer(message string) {
+	_, err := client.MessageToServer(context.Background(), &proto.Message{Msg: message, Author: userName})
 	if err != nil {
 		log.Fatalf("could not send message: %v", err)
 	}
-
-	//go messageStream(client) // Connect to server stream
-
-	//readTerminal()
-
-	go readTerminal2()
-
-	time.Sleep(10 * time.Second)
 }
 
 func messageStream(client proto.ChitChatClient) {
-	stream, err := client.GetStream(context.Background(), &proto.Empty{})
+	stream, err := client.GetStream(context.Background(), &proto.IdMessage{Id: id})
 	if err != nil {
 		log.Fatalf("could not get stream: %v", err)
 	}
 
 	for {
 		msg, _ := stream.Recv()
-
 		printMessage(msg)
 	}
 }
@@ -55,35 +72,29 @@ func printMessage(msg *proto.Message) {
 	fmt.Println(msg.Author + ": " + msg.Msg)
 }
 
-/*
-func createMessage() proto.Message {
-}
-*/
-
 func readTerminal() string {
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Input message: ")
-	fmt.Println("---------------------")
 
-	fmt.Print("-> ")
+	//fmt.Print("-> ")
 	text, _ := reader.ReadString('\n')
 	text = strings.Replace(text, "\n", "", -1) // convert CRLF to LF
+	text = strings.Replace(text, "\r", "", -1) // convert CRLF to LF
 
 	return text
 }
+func joinServer() {
+	IdMessage, err := client.UserJoins(context.Background(), &proto.JoinMessage{Username: userName})
+	if err != nil {
+		log.Fatalf("could not connect: %v", err)
+	}
 
-func readTerminal2() {
-	var input []byte
-	reader := bufio.NewReader(os.Stdin)
-	// disables input buffering
-	exec.Command("stty", "-F", "/dev/tty", "cbreak", "min", "1").Run()
-	// append each character that gets typed to input slice
-	for {
-		fmt.Println("-> " + string(input))
-		b, err := reader.ReadByte()
-		if err != nil {
-			panic(err)
-		}
-		input = append(input, b)
+	id = IdMessage.GetId()
+	fmt.Println("You have joined the server as ", userName, " with the id: ", id)
+}
+
+func leaveServer() {
+	_, err := client.UserLeaves(context.Background(), &proto.LeaveMessage{Username: userName, Id: id})
+	if err != nil {
+		log.Fatalf("could not connect: %v", err)
 	}
 }

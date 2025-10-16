@@ -6,13 +6,30 @@ option go_package = "ChicChat/grpc/proto";
 message Message {
   string msg = 1;
   string author = 2;
-  string lamportTimestamp = 3;
+  int32 lamportTimestamp = 3;
 }
 
 message Empty {}
 
+message JoinMessage{
+  string username = 1;
+  int32 lamportTimestamp = 2;
+}
+
+message LeaveMessage{
+  string username = 1;
+  int32 id = 2;
+  int32 lamportTimestamp = 3;
+}
+
+message IdMessage {
+  int32 id = 1;
+}
+
 // Declare gRPC services
 service ChitChat {
   rpc MessageToServer (Message) returns (Empty) {}; // Make a GET to the Server
-  rpc GetStream (Empty) returns (stream Message) {}; // Make a Stream to the Server
+  rpc GetStream (IdMessage) returns (stream Message) {}; // Make a Stream to the Server
+  rpc UserJoins (JoinMessage) returns (IdMessage) {}; // New users join by calling this rpc
+  rpc UserLeaves (LeaveMessage) returns (Empty) {}; // Users can leav by calling this method
 }
