@@ -31,10 +31,10 @@ const (
 //
 // Declare gRPC services
 type ChitChatClient interface {
-	MessageToServer(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Empty, error)
+	MessageToServer(ctx context.Context, in *Message, opts ...grpc.CallOption) (*TimeMessage, error)
 	GetStream(ctx context.Context, in *IdMessage, opts ...grpc.CallOption) (grpc.ServerStreamingClient[Message], error)
 	UserJoins(ctx context.Context, in *JoinMessage, opts ...grpc.CallOption) (*IdMessage, error)
-	UserLeaves(ctx context.Context, in *LeaveMessage, opts ...grpc.CallOption) (*Empty, error)
+	UserLeaves(ctx context.Context, in *LeaveMessage, opts ...grpc.CallOption) (*TimeMessage, error)
 }
 
 type chitChatClient struct {
@@ -45,9 +45,9 @@ func NewChitChatClient(cc grpc.ClientConnInterface) ChitChatClient {
 	return &chitChatClient{cc}
 }
 
-func (c *chitChatClient) MessageToServer(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Empty, error) {
+func (c *chitChatClient) MessageToServer(ctx context.Context, in *Message, opts ...grpc.CallOption) (*TimeMessage, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
+	out := new(TimeMessage)
 	err := c.cc.Invoke(ctx, ChitChat_MessageToServer_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -84,9 +84,9 @@ func (c *chitChatClient) UserJoins(ctx context.Context, in *JoinMessage, opts ..
 	return out, nil
 }
 
-func (c *chitChatClient) UserLeaves(ctx context.Context, in *LeaveMessage, opts ...grpc.CallOption) (*Empty, error) {
+func (c *chitChatClient) UserLeaves(ctx context.Context, in *LeaveMessage, opts ...grpc.CallOption) (*TimeMessage, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Empty)
+	out := new(TimeMessage)
 	err := c.cc.Invoke(ctx, ChitChat_UserLeaves_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -100,10 +100,10 @@ func (c *chitChatClient) UserLeaves(ctx context.Context, in *LeaveMessage, opts 
 //
 // Declare gRPC services
 type ChitChatServer interface {
-	MessageToServer(context.Context, *Message) (*Empty, error)
+	MessageToServer(context.Context, *Message) (*TimeMessage, error)
 	GetStream(*IdMessage, grpc.ServerStreamingServer[Message]) error
 	UserJoins(context.Context, *JoinMessage) (*IdMessage, error)
-	UserLeaves(context.Context, *LeaveMessage) (*Empty, error)
+	UserLeaves(context.Context, *LeaveMessage) (*TimeMessage, error)
 	mustEmbedUnimplementedChitChatServer()
 }
 
@@ -114,7 +114,7 @@ type ChitChatServer interface {
 // pointer dereference when methods are called.
 type UnimplementedChitChatServer struct{}
 
-func (UnimplementedChitChatServer) MessageToServer(context.Context, *Message) (*Empty, error) {
+func (UnimplementedChitChatServer) MessageToServer(context.Context, *Message) (*TimeMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MessageToServer not implemented")
 }
 func (UnimplementedChitChatServer) GetStream(*IdMessage, grpc.ServerStreamingServer[Message]) error {
@@ -123,7 +123,7 @@ func (UnimplementedChitChatServer) GetStream(*IdMessage, grpc.ServerStreamingSer
 func (UnimplementedChitChatServer) UserJoins(context.Context, *JoinMessage) (*IdMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserJoins not implemented")
 }
-func (UnimplementedChitChatServer) UserLeaves(context.Context, *LeaveMessage) (*Empty, error) {
+func (UnimplementedChitChatServer) UserLeaves(context.Context, *LeaveMessage) (*TimeMessage, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserLeaves not implemented")
 }
 func (UnimplementedChitChatServer) mustEmbedUnimplementedChitChatServer() {}

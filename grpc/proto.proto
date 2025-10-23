@@ -7,9 +7,12 @@ message Message {
   string msg = 1;
   string author = 2;
   int32 lamportTimestamp = 3;
+  int32 id = 4; 
 }
 
-message Empty {}
+message TimeMessage {
+    int32 lamportTimestamp = 1; 
+}
 
 message JoinMessage{
   string username = 1;
@@ -24,12 +27,13 @@ message LeaveMessage{
 
 message IdMessage {
   int32 id = 1;
+  int32 lamportTimestamp = 2; 
 }
 
 // Declare gRPC services
 service ChitChat {
-  rpc MessageToServer (Message) returns (Empty) {}; // Make a GET to the Server
+  rpc MessageToServer (Message) returns (TimeMessage) {}; // Make a GET to the Server
   rpc GetStream (IdMessage) returns (stream Message) {}; // Make a Stream to the Server
   rpc UserJoins (JoinMessage) returns (IdMessage) {}; // New users join by calling this rpc
-  rpc UserLeaves (LeaveMessage) returns (Empty) {}; // Users can leav by calling this method
+  rpc UserLeaves (LeaveMessage) returns (TimeMessage) {}; // Users can leav by calling this method
 }

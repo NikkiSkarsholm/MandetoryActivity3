@@ -27,6 +27,7 @@ type Message struct {
 	Msg              string                 `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
 	Author           string                 `protobuf:"bytes,2,opt,name=author,proto3" json:"author,omitempty"`
 	LamportTimestamp int32                  `protobuf:"varint,3,opt,name=lamportTimestamp,proto3" json:"lamportTimestamp,omitempty"`
+	Id               int32                  `protobuf:"varint,4,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -82,26 +83,34 @@ func (x *Message) GetLamportTimestamp() int32 {
 	return 0
 }
 
-type Empty struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+func (x *Message) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
 }
 
-func (x *Empty) Reset() {
-	*x = Empty{}
+type TimeMessage struct {
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	LamportTimestamp int32                  `protobuf:"varint,1,opt,name=lamportTimestamp,proto3" json:"lamportTimestamp,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
+}
+
+func (x *TimeMessage) Reset() {
+	*x = TimeMessage{}
 	mi := &file_proto_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Empty) String() string {
+func (x *TimeMessage) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Empty) ProtoMessage() {}
+func (*TimeMessage) ProtoMessage() {}
 
-func (x *Empty) ProtoReflect() protoreflect.Message {
+func (x *TimeMessage) ProtoReflect() protoreflect.Message {
 	mi := &file_proto_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -113,9 +122,16 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Empty.ProtoReflect.Descriptor instead.
-func (*Empty) Descriptor() ([]byte, []int) {
+// Deprecated: Use TimeMessage.ProtoReflect.Descriptor instead.
+func (*TimeMessage) Descriptor() ([]byte, []int) {
 	return file_proto_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *TimeMessage) GetLamportTimestamp() int32 {
+	if x != nil {
+		return x.LamportTimestamp
+	}
+	return 0
 }
 
 type JoinMessage struct {
@@ -231,10 +247,11 @@ func (x *LeaveMessage) GetLamportTimestamp() int32 {
 }
 
 type IdMessage struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state            protoimpl.MessageState `protogen:"open.v1"`
+	Id               int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	LamportTimestamp int32                  `protobuf:"varint,2,opt,name=lamportTimestamp,proto3" json:"lamportTimestamp,omitempty"`
+	unknownFields    protoimpl.UnknownFields
+	sizeCache        protoimpl.SizeCache
 }
 
 func (x *IdMessage) Reset() {
@@ -274,33 +291,43 @@ func (x *IdMessage) GetId() int32 {
 	return 0
 }
 
+func (x *IdMessage) GetLamportTimestamp() int32 {
+	if x != nil {
+		return x.LamportTimestamp
+	}
+	return 0
+}
+
 var File_proto_proto protoreflect.FileDescriptor
 
 const file_proto_proto_rawDesc = "" +
 	"\n" +
-	"\vproto.proto\"_\n" +
+	"\vproto.proto\"o\n" +
 	"\aMessage\x12\x10\n" +
 	"\x03msg\x18\x01 \x01(\tR\x03msg\x12\x16\n" +
 	"\x06author\x18\x02 \x01(\tR\x06author\x12*\n" +
-	"\x10lamportTimestamp\x18\x03 \x01(\x05R\x10lamportTimestamp\"\a\n" +
-	"\x05Empty\"U\n" +
+	"\x10lamportTimestamp\x18\x03 \x01(\x05R\x10lamportTimestamp\x12\x0e\n" +
+	"\x02id\x18\x04 \x01(\x05R\x02id\"9\n" +
+	"\vTimeMessage\x12*\n" +
+	"\x10lamportTimestamp\x18\x01 \x01(\x05R\x10lamportTimestamp\"U\n" +
 	"\vJoinMessage\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12*\n" +
 	"\x10lamportTimestamp\x18\x02 \x01(\x05R\x10lamportTimestamp\"f\n" +
 	"\fLeaveMessage\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\x05R\x02id\x12*\n" +
-	"\x10lamportTimestamp\x18\x03 \x01(\x05R\x10lamportTimestamp\"\x1b\n" +
+	"\x10lamportTimestamp\x18\x03 \x01(\x05R\x10lamportTimestamp\"G\n" +
 	"\tIdMessage\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x05R\x02id2\xa8\x01\n" +
-	"\bChitChat\x12%\n" +
-	"\x0fMessageToServer\x12\b.Message\x1a\x06.Empty\"\x00\x12%\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12*\n" +
+	"\x10lamportTimestamp\x18\x02 \x01(\x05R\x10lamportTimestamp2\xb4\x01\n" +
+	"\bChitChat\x12+\n" +
+	"\x0fMessageToServer\x12\b.Message\x1a\f.TimeMessage\"\x00\x12%\n" +
 	"\tGetStream\x12\n" +
 	".IdMessage\x1a\b.Message\"\x000\x01\x12'\n" +
 	"\tUserJoins\x12\f.JoinMessage\x1a\n" +
-	".IdMessage\"\x00\x12%\n" +
+	".IdMessage\"\x00\x12+\n" +
 	"\n" +
-	"UserLeaves\x12\r.LeaveMessage\x1a\x06.Empty\"\x00B\x15Z\x13ChicChat/grpc/protob\x06proto3"
+	"UserLeaves\x12\r.LeaveMessage\x1a\f.TimeMessage\"\x00B\x15Z\x13ChicChat/grpc/protob\x06proto3"
 
 var (
 	file_proto_proto_rawDescOnce sync.Once
@@ -317,7 +344,7 @@ func file_proto_proto_rawDescGZIP() []byte {
 var file_proto_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_proto_goTypes = []any{
 	(*Message)(nil),      // 0: Message
-	(*Empty)(nil),        // 1: Empty
+	(*TimeMessage)(nil),  // 1: TimeMessage
 	(*JoinMessage)(nil),  // 2: JoinMessage
 	(*LeaveMessage)(nil), // 3: LeaveMessage
 	(*IdMessage)(nil),    // 4: IdMessage
@@ -327,10 +354,10 @@ var file_proto_proto_depIdxs = []int32{
 	4, // 1: ChitChat.GetStream:input_type -> IdMessage
 	2, // 2: ChitChat.UserJoins:input_type -> JoinMessage
 	3, // 3: ChitChat.UserLeaves:input_type -> LeaveMessage
-	1, // 4: ChitChat.MessageToServer:output_type -> Empty
+	1, // 4: ChitChat.MessageToServer:output_type -> TimeMessage
 	0, // 5: ChitChat.GetStream:output_type -> Message
 	4, // 6: ChitChat.UserJoins:output_type -> IdMessage
-	1, // 7: ChitChat.UserLeaves:output_type -> Empty
+	1, // 7: ChitChat.UserLeaves:output_type -> TimeMessage
 	4, // [4:8] is the sub-list for method output_type
 	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

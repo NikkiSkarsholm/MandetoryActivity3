@@ -1,53 +1,79 @@
 package main
 
 import (
+	lamportclock "ChitChat/General"
 	proto "ChitChat/grpc"
+	"bufio"
 	"context"
-	"fmt"
 	"log"
 	"net"
+	"os"
+	"strconv"
+	"strings"
 
 	"google.golang.org/grpc"
 )
 
-var incommingMessages = make(chan proto.Message)
 var users int = 0
 var userIndexCounter int32 = 0
 var userChannels = make(map[int32]chan proto.Message)
+var clock lamportclock.SafeClock
 
 type ChitChatServer struct {
 	proto.UnimplementedChitChatServer
-	savedMessages []proto.Message
 }
 
 func main() {
+	clock.Iterate()
 	server := &ChitChatServer{}
 
-	server.startServer()
+	go server.startServer()
+
+	for {
+		serverInput := readTerminal()
+
+		if serverInput == "Quit" || serverInput == "quit" || serverInput == "Q" || serverInput == "q" {
+			log.Println("[SERVER]: Shutting down server at logical time", clock.GetTime())
+			return
+		}
+	}
+}
+
+func readTerminal() string {
+	reader := bufio.NewReader(os.Stdin)
+
+	text, _ := reader.ReadString('\n')
+	text = strings.Replace(text, "\n", "", -1) // convert CRLF to LF
+	text = strings.Replace(text, "\r", "", -1) // convert CRLF to LF
+	clock.Iterate()
+	return text
 }
 
 func (s *ChitChatServer) startServer() {
-	fmt.Println("Starting server")
+	log.Println("[SERVER]: Starting server at logical time", clock.GetTime())
 	grpcServer := grpc.NewServer()
 	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
-		log.Fatalf("Server did not work")
+		log.Fatal("[SERVER]: Server did not work at logical time", clock.GetTime())
 	}
-
+	clock.Iterate()
 	proto.RegisterChitChatServer(grpcServer, s)
 
 	err = grpcServer.Serve(listener)
 	if err != nil {
-		log.Fatalf("Server did not work")
+		log.Fatal("[SERVER]: Server did not work at logical time", clock.GetTime())
 	}
+
+	clock.Iterate()
 }
 
-func (s *ChitChatServer) GetStream(clientID *proto.IdMessage, stream proto.ChitChat_GetStreamServer) (err error) {
-	// Based on the Message object's lamport timestamp, determine which message to stream out first
+func (s *ChitChatServer) GetStream(requestMessage *proto.IdMessage, stream proto.ChitChat_GetStreamServer) (err error) {
+	clock.MatchTime(requestMessage.GetLamportTimestamp())
 
 	for {
-		message := <-userChannels[clientID.GetId()]
+		message := <-userChannels[requestMessage.GetId()]
 
+		message.LamportTimestamp = clock.GetTime()
 		err := stream.Send(&message)
 		if err != nil {
 			return err
@@ -55,49 +81,56 @@ func (s *ChitChatServer) GetStream(clientID *proto.IdMessage, stream proto.ChitC
 	}
 }
 
-func (s *ChitChatServer) MessageToServer(ctx context.Context, msg *proto.Message) (*proto.Empty, error) {
+func (s *ChitChatServer) MessageToServer(ctx context.Context, msg *proto.Message) (*proto.TimeMessage, error) {
+	clock.MatchTime(msg.GetLamportTimestamp())
 
+	log.Println("[SERVER]: Received message '"+msg.GetMsg()+"' from '"+msg.GetAuthor()+"' with the id", msg.GetId(), "at logical time ", clock.GetTime())
 	for _, channel := range userChannels {
 		channel <- *msg
+		clock.Iterate()
 	}
 
-	return &proto.Empty{}, nil
+	return &proto.TimeMessage{LamportTimestamp: clock.GetTime()}, nil
 }
 
 func (s *ChitChatServer) UserJoins(ctx context.Context, joinMessage *proto.JoinMessage) (*proto.IdMessage, error) {
-	fmt.Println("Participant '" + joinMessage.GetUsername() + "' joined chit chat at logical time")
+	clock.MatchTime(joinMessage.GetLamportTimestamp())
 	users++
-	fmt.Println("There are currectly ", users, " manny users")
 
 	id := userIndexCounter
 	userIndexCounter++
+
+	log.Println("[SERVER]: Participant '"+joinMessage.GetUsername()+"' with id", id, "joined chit chat at logical time", clock.GetTime())
 
 	// give the user a channel
 	userChannels[id] = make(chan proto.Message, 1)
 
 	// send message to clients that the user joined
-	test := "Participant '" + joinMessage.GetUsername() + "' joined chit chat at logical time"
+	test := "Participant '" + joinMessage.GetUsername() + "' with id " + strconv.Itoa(int(id)) + " joined chit chat at logical time " + strconv.Itoa(int(clock.GetTime()))
 	author := "server"
-	Msg := proto.Message{Msg: test, Author: author}
-	s.MessageToServer(context.Background(), &Msg)
+	Msg := proto.Message{Msg: test, Author: author, LamportTimestamp: clock.GetTime()}
+	clock.Iterate()
+	for _, channel := range userChannels {
+		channel <- Msg
+		clock.Iterate()
+	}
 
-	return &proto.IdMessage{Id: id}, nil
+	return &proto.IdMessage{Id: id, LamportTimestamp: clock.GetTime()}, nil
 }
 
-func (s *ChitChatServer) UserLeaves(ctx context.Context, leaveMessage *proto.LeaveMessage) (*proto.Empty, error) {
-	fmt.Println("Participant '" + leaveMessage.GetUsername() + "' left chit chat at logical time")
+func (s *ChitChatServer) UserLeaves(ctx context.Context, leaveMessage *proto.LeaveMessage) (*proto.TimeMessage, error) {
+	clock.MatchTime(leaveMessage.GetLamportTimestamp())
+	log.Println("[SERVER]: Participant '"+leaveMessage.GetUsername()+"' with id", leaveMessage.GetId(), "left chit chat at logical time ", clock.GetTime())
 	users--
-	fmt.Println("There are currectly ", users, " manny users")
 
-	fmt.Println("Deleting channel nr ", leaveMessage.GetId(), " number of channels are: ", len(userChannels))
 	delete(userChannels, leaveMessage.GetId())
-	fmt.Println("After deleting channel nr ", leaveMessage.GetId(), " number of channels are: ", len(userChannels))
 
 	// send message to clients that the user left
-	test := "Participant '" + leaveMessage.GetUsername() + "' left chit chat at logical time"
+	test := "Participant '" + leaveMessage.GetUsername() + "' with id " + strconv.Itoa(int(leaveMessage.GetId())) + " left chit chat at logical time " + strconv.Itoa(int(clock.GetTime()))
 	author := "server"
-	Msg := proto.Message{Msg: test, Author: author}
+	Msg := proto.Message{Msg: test, Author: author, LamportTimestamp: clock.GetTime()}
+	clock.Iterate()
 	s.MessageToServer(context.Background(), &Msg)
 
-	return &proto.Empty{}, nil
+	return &proto.TimeMessage{LamportTimestamp: clock.GetTime()}, nil
 }
