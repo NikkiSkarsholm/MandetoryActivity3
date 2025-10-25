@@ -130,7 +130,10 @@ func (s *ChitChatServer) UserLeaves(ctx context.Context, leaveMessage *proto.Lea
 	author := "server"
 	Msg := proto.Message{Msg: test, Author: author, LamportTimestamp: clock.GetTime()}
 	clock.Iterate()
-	s.MessageToServer(context.Background(), &Msg)
+	for _, channel := range userChannels {
+		channel <- Msg
+		clock.Iterate()
+	}
 
 	return &proto.TimeMessage{LamportTimestamp: clock.GetTime()}, nil
 }

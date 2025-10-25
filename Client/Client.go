@@ -66,6 +66,7 @@ func messageServer(message string) {
 }
 
 func messageStream(client proto.ChitChatClient) {
+	clock.Iterate()
 	stream, err := client.GetStream(context.Background(), &proto.IdMessage{Id: id, LamportTimestamp: clock.GetTime()})
 	if err != nil {
 		log.Fatalf("Could not get stream: %v", err)
