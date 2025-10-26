@@ -22,19 +22,19 @@ var id int32
 func main() {
 	// make profile
 	clock.Iterate()
-	log.Println("Please enter your username:")
+	log.Println("[CLIENT]: Please enter your username:")
 	userName = readTerminal()
 
 	// connecting to server
-	log.Println("Connecting to server ...")
+	log.Println("[CLIENT]: Connecting to server ...")
 	conn, err := grpc.NewClient("localhost:8080", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("Could not connect: %v", err)
+		log.Fatalf("[CLIENT]: Could not connect: %v", err)
 	}
 	clock.Iterate()
 	client = proto.NewChitChatClient(conn)
 	joinServer()
-	log.Println("Connection established")
+	log.Println("[CLIENT]: Connection established at logical time", clock.GetTime())
 
 	// Print messages using the message stream
 	go messageStream(client)
@@ -44,7 +44,7 @@ func main() {
 		userInput := readTerminal()
 
 		if len(userInput) > 128 || len(userInput) <= 0 || !utf8.ValidString(userInput) {
-			log.Println("[WARNING] Could not send message. Message must not be empty, be valid in utf8 and have maximum length of 128 characters")
+			log.Println("[CLIENT]: WARNING: Could not send message. Message must not be empty, be valid in utf8 and have maximum length of 128 characters")
 			continue
 		}
 
@@ -58,9 +58,10 @@ func main() {
 }
 
 func messageServer(message string) {
+	log.Println("[CLIENT]: Sending Message to server at logical time", clock.GetTime())
 	TimeMessage, err := client.MessageToServer(context.Background(), &proto.Message{Msg: message, Author: userName, LamportTimestamp: clock.GetTime(), Id: id})
 	if err != nil {
-		log.Fatalf("Could not send message: %v", err)
+		log.Fatalf("[CLIENT]: Could not send message: %v", err)
 	}
 	clock.MatchTime(TimeMessage.GetLamportTimestamp())
 }
@@ -76,6 +77,7 @@ func messageStream(client proto.ChitChatClient) {
 	for {
 		msg, _ := stream.Recv()
 		clock.MatchTime(msg.GetLamportTimestamp())
+		log.Println("[CLIENT]: Received message from server at logical time", clock.GetTime())
 		printMessage(msg)
 	}
 }
@@ -102,7 +104,7 @@ func joinServer() {
 
 	id = IdMessage.GetId()
 	clock.MatchTime(IdMessage.GetLamportTimestamp())
-	log.Println("You have joined the server as ", userName, " with the id: ", id)
+	log.Println("[CLIENT]: You have joined the server as ", userName, " with the id:", id, "at logical time", clock.GetTime())
 }
 
 func leaveServer() {
@@ -112,5 +114,5 @@ func leaveServer() {
 	}
 
 	clock.MatchTime(TimeMessage.GetLamportTimestamp())
-	log.Println("You have left the server at logical time ", clock.GetTime())
+	log.Println("[CLIENT]: You have left the server at logical time ", clock.GetTime())
 }

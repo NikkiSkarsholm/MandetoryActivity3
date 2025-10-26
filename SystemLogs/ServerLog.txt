@@ -1,0 +1,21 @@
+2025/10/26 15:12:32 [SERVER]: Starting server at logical time 1
+2025/10/26 15:12:41 [SERVER]: Participant 'Karam' with id 0 joined chit chat at logical time 4
+2025/10/26 15:12:55 [SERVER]: Participant 'Nikki' with id 1 joined chit chat at logical time 10
+2025/10/26 15:13:22 [SERVER]: Participant 'Isabella' with id 2 joined chit chat at logical time 17
+2025/10/26 15:13:30 [SERVER]: Received message 'Hej!' from 'Karam' with the id 0 at logical time  25
+2025/10/26 15:13:33 [SERVER]: Received message 'Heyo!' from 'Nikki' with the id 1 at logical time  31
+2025/10/26 15:13:39 [SERVER]: Received message 'Hejsa!' from 'Isabella' with the id 2 at logical time  37
+2025/10/26 15:13:49 [SERVER]: Received message 'Hvordan går afleveringen?' from 'Nikki' with the id 1 at logical time  43
+2025/10/26 15:13:56 [SERVER]: Received message 'Jeg står og tester system logs lige nu!' from 'Karam' with the id 0 at logical time  49
+2025/10/26 15:14:12 [SERVER]: Received message 'Jeg har færdiggjort diragrammet!' from 'Isabella' with the id 2 at logical time  55
+2025/10/26 15:14:16 [SERVER]: Received message 'Super!' from 'Nikki' with the id 1 at logical time  61
+2025/10/26 15:14:32 [SERVER]: Received message 'Så ses vi senere!' from 'Nikki' with the id 1 at logical time  68
+2025/10/26 15:14:36 [SERVER]: Received message 'Farvel!' from 'Karam' with the id 0 at logical time  74
+2025/10/26 15:14:41 [SERVER]: Received message 'Ja, farvel!' from 'Isabella' with the id 2 at logical time  80
+2025/10/26 15:14:43 [SERVER]: Participant 'Nikki' with id 1 left chit chat at logical time  86
+2025/10/26 15:15:17 [SERVER]: Received message 'Vi ses senere!' from 'Isabella' with the id 2 at logical time  92
+2025/10/26 15:15:20 [SERVER]: Participant 'Isabella' with id 2 left chit chat at logical time  98
+2025/10/26 15:15:35 [SERVER]: Received message 'Damn, jeg nået ikke at sige farvel xD' from 'Karam' with the id 0 at logical time  103
+2025/10/26 15:15:38 [SERVER]: Participant 'Karam' with id 0 left chit chat at logical time  108
+q
+2025/10/26 15:15:44 [SERVER]: Shutting down server at logical time 110

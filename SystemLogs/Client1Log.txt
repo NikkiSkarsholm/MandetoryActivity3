@@ -1,0 +1,49 @@
+2025/10/26 15:12:36 [CLIENT]: Please enter your username:
+Karam
+2025/10/26 15:12:41 [CLIENT]: Connecting to server ...
+2025/10/26 15:12:41 [CLIENT]: You have joined the server as  Karam  with the id: 0 at logical time 7
+2025/10/26 15:12:41 [CLIENT]: Connection established at logical time 7
+2025/10/26 15:12:41 [CLIENT]: Received message from server at logical time 10
+2025/10/26 15:12:41 server: Participant 'Karam' with id 0 joined chit chat at logical time 4. Client's current time:  10
+2025/10/26 15:12:55 [CLIENT]: Received message from server at logical time 14
+2025/10/26 15:12:55 server: Participant 'Nikki' with id 1 joined chit chat at logical time 10. Client's current time:  14
+2025/10/26 15:13:22 [CLIENT]: Received message from server at logical time 22
+2025/10/26 15:13:22 server: Participant 'Isabella' with id 2 joined chit chat at logical time 17. Client's current time:  22
+Hej!
+2025/10/26 15:13:30 [CLIENT]: Sending Message to server at logical time 23
+2025/10/26 15:13:30 [CLIENT]: Received message from server at logical time 29
+2025/10/26 15:13:30 Karam: Hej!. Client's current time:  29
+2025/10/26 15:13:33 [CLIENT]: Received message from server at logical time 35
+2025/10/26 15:13:33 Nikki: Heyo!. Client's current time:  35
+2025/10/26 15:13:39 [CLIENT]: Received message from server at logical time 41
+2025/10/26 15:13:39 Isabella: Hejsa!. Client's current time:  41
+2025/10/26 15:13:49 [CLIENT]: Received message from server at logical time 47
+2025/10/26 15:13:49 Nikki: Hvordan går afleveringen?. Client's current time:  47
+Jeg står og tester system logs lige nu!
+2025/10/26 15:13:56 [CLIENT]: Sending Message to server at logical time 48
+2025/10/26 15:13:56 [CLIENT]: Received message from server at logical time 53
+2025/10/26 15:13:56 Karam: Jeg står og tester system logs lige nu!. Client's current time:  54
+2025/10/26 15:14:12 [CLIENT]: Received message from server at logical time 59
+2025/10/26 15:14:12 Isabella: Jeg har færdiggjort diragrammet!. Client's current time:  59
+2025/10/26 15:14:16 [CLIENT]: Received message from server at logical time 65
+2025/10/26 15:14:16 Nikki: Super!. Client's current time:  65
+2025/10/26 15:14:32 [CLIENT]: Received message from server at logical time 72
+2025/10/26 15:14:32 Nikki: Så ses vi senere!. Client's current time:  72
+Farvel!
+2025/10/26 15:14:36 [CLIENT]: Sending Message to server at logical time 73
+2025/10/26 15:14:36 [CLIENT]: Received message from server at logical time 78
+2025/10/26 15:14:36 Karam: Farvel!. Client's current time:  79
+2025/10/26 15:14:41 [CLIENT]: Received message from server at logical time 84
+2025/10/26 15:14:41 Isabella: Ja, farvel!. Client's current time:  84
+2025/10/26 15:14:43 [CLIENT]: Received message from server at logical time 90
+2025/10/26 15:14:43 server: Participant 'Nikki' with id 1 left chit chat at logical time 86. Client's current time:  90
+2025/10/26 15:15:17 [CLIENT]: Received message from server at logical time 95
+2025/10/26 15:15:17 Isabella: Vi ses senere!. Client's current time:  95
+2025/10/26 15:15:20 [CLIENT]: Received message from server at logical time 101
+2025/10/26 15:15:20 server: Participant 'Isabella' with id 2 left chit chat at logical time 98. Client's current time:  101
+Damn, jeg nået ikke at sige farvel xD
+2025/10/26 15:15:35 [CLIENT]: Sending Message to server at logical time 102
+2025/10/26 15:15:35 [CLIENT]: Received message from server at logical time 105
+2025/10/26 15:15:35 Karam: Damn, jeg nået ikke at sige farvel xD. Client's current time:  106
+q
+2025/10/26 15:15:38 [CLIENT]: You have left the server at logical time  110

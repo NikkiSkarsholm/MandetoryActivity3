@@ -1,0 +1,39 @@
+2025/10/26 15:12:47 [CLIENT]: Please enter your username:
+Nikki
+2025/10/26 15:12:55 [CLIENT]: Connecting to server ...
+2025/10/26 15:12:55 [CLIENT]: You have joined the server as  Nikki  with the id: 1 at logical time 14
+2025/10/26 15:12:55 [CLIENT]: Connection established at logical time 14
+2025/10/26 15:12:55 [CLIENT]: Received message from server at logical time 17
+2025/10/26 15:12:55 server: Participant 'Nikki' with id 1 joined chit chat at logical time 10. Client's current time:  17
+2025/10/26 15:13:22 [CLIENT]: Received message from server at logical time 22
+2025/10/26 15:13:22 server: Participant 'Isabella' with id 2 joined chit chat at logical time 17. Client's current time:  22
+2025/10/26 15:13:30 [CLIENT]: Received message from server at logical time 29
+2025/10/26 15:13:30 Karam: Hej!. Client's current time:  29
+Heyo!
+2025/10/26 15:13:33 [CLIENT]: Sending Message to server at logical time 30
+2025/10/26 15:13:33 [CLIENT]: Received message from server at logical time 35
+2025/10/26 15:13:33 Nikki: Heyo!. Client's current time:  36
+2025/10/26 15:13:39 [CLIENT]: Received message from server at logical time 41
+2025/10/26 15:13:39 Isabella: Hejsa!. Client's current time:  41
+Hvordan går afleveringen?
+2025/10/26 15:13:49 [CLIENT]: Sending Message to server at logical time 42
+2025/10/26 15:13:49 [CLIENT]: Received message from server at logical time 48
+2025/10/26 15:13:49 Nikki: Hvordan går afleveringen?. Client's current time:  48
+2025/10/26 15:13:56 [CLIENT]: Received message from server at logical time 53
+2025/10/26 15:13:56 Karam: Jeg står og tester system logs lige nu!. Client's current time:  53
+2025/10/26 15:14:12 [CLIENT]: Received message from server at logical time 59
+2025/10/26 15:14:12 Isabella: Jeg har færdiggjort diragrammet!. Client's current time:  59
+Super!
+2025/10/26 15:14:16 [CLIENT]: Sending Message to server at logical time 60
+2025/10/26 15:14:16 [CLIENT]: Received message from server at logical time 66
+2025/10/26 15:14:16 Nikki: Super!. Client's current time:  66
+Så ses vi senere!
+2025/10/26 15:14:32 [CLIENT]: Sending Message to server at logical time 67
+2025/10/26 15:14:32 [CLIENT]: Received message from server at logical time 73
+2025/10/26 15:14:32 Nikki: Så ses vi senere!. Client's current time:  73
+2025/10/26 15:14:36 [CLIENT]: Received message from server at logical time 78
+2025/10/26 15:14:36 Karam: Farvel!. Client's current time:  78
+2025/10/26 15:14:41 [CLIENT]: Received message from server at logical time 84
+2025/10/26 15:14:41 Isabella: Ja, farvel!. Client's current time:  84
+q
+2025/10/26 15:14:43 [CLIENT]: You have left the server at logical time  90
